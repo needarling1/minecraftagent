@@ -39,26 +39,44 @@ if ! kill -0 $SERVER_PID 2>/dev/null; then
     exit 1
 fi
 
-# Start Cloudflared tunnel
-echo "Starting Cloudflared tunnel..."
-cloudflared tunnel run mcu-green-agent > cloudflared.log 2>&1 &
-TUNNEL_PID=$!
-echo "Tunnel started with PID: $TUNNEL_PID"
+# Optional: Start Cloudflared tunnel for local testing
+if command -v cloudflared &> /dev/null; then
+    echo "Starting Cloudflared tunnel (optional, for local testing)..."
+    cloudflared tunnel --url http://localhost:8000 > cloudflared.log 2>&1 &
+    TUNNEL_PID=$!
+    echo "Tunnel started with PID: $TUNNEL_PID"
+    echo ""
+    echo "Public URL will be shown in cloudflared.log"
+else
+    echo "Cloudflared not found. Skipping tunnel setup."
+    echo "For production, deploy to Render.com (see DEPLOY_RENDER.md)"
+    TUNNEL_PID=""
+fi
 
 echo ""
 echo "=========================================="
 echo "A2A Server is running!"
 echo "=========================================="
 echo "Server PID: $SERVER_PID"
-echo "Tunnel PID: $TUNNEL_PID"
+if [ ! -z "$TUNNEL_PID" ]; then
+    echo "Tunnel PID: $TUNNEL_PID"
+fi
+echo ""
+echo "Local URL: http://localhost:8000"
 echo ""
 echo "To stop the server:"
-echo "  kill $SERVER_PID $TUNNEL_PID"
+if [ ! -z "$TUNNEL_PID" ]; then
+    echo "  kill $SERVER_PID $TUNNEL_PID"
+else
+    echo "  kill $SERVER_PID"
+fi
 echo ""
 echo "To view logs:"
 echo "  tail -f server.log"
-echo "  tail -f cloudflared.log"
+if [ ! -z "$TUNNEL_PID" ]; then
+    echo "  tail -f cloudflared.log"
+fi
 echo ""
-echo "Server URL will be shown in cloudflared.log"
+echo "For production deployment, see DEPLOY_RENDER.md"
 echo "=========================================="
 

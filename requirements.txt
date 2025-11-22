@@ -10,4 +10,5 @@ pyyaml>=6.0
 av>=10.0.0
 numpy>=1.24.0
 minestudio>=0.1.0
+python-dotenv>=1.0.0
 

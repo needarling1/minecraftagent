@@ -16,6 +16,13 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import uvicorn
 
+# Try to load environment variables from .env file (optional)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # python-dotenv not installed, that's okay
+
 # Import evaluation functions - need to handle path issues
 import sys
 sys.path.insert(0, os.path.dirname(__file__))
@@ -961,15 +968,18 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description="Run A2A Green Agent Server")
     parser.add_argument("--host", type=str, default="0.0.0.0", help="Host to bind to")
-    parser.add_argument("--port", type=int, default=8000, help="Port to bind to")
+    parser.add_argument("--port", type=int, default=None, help="Port to bind to (defaults to PORT env var or 8000)")
     parser.add_argument("--reload", action="store_true", help="Enable auto-reload")
     
     args = parser.parse_args()
     
+    # Use PORT environment variable (set by Render.com) or fallback to args.port or 8000
+    port = args.port or int(os.getenv("PORT", 8000))
+    
     uvicorn.run(
         "a2a_server:app",
         host=args.host,
-        port=args.port,
+        port=port,
         reload=args.reload
     )
 

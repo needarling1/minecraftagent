@@ -42,9 +42,9 @@ The green agent can:
 ## Prerequisites
 
 - Python 3.10+
-- Cloudflare account (for cloudflared tunnel)
-- OpenAI API key (for video evaluation)
+- OpenAI API key (for video evaluation and task generation)
 - Java 8 (for MineStudio)
+- Render.com account (for deployment) OR cloudflared (for local tunneling)
 
 ## Installation
 
@@ -81,59 +81,63 @@ conda install --channel=conda-forge openjdk=8
 export OPENAI_API_KEY="your-openai-api-key"
 ```
 
-## Setup Cloudflared Tunnel
+## Deployment Options
 
-1. **Run the setup script**:
+### Option 1: Deploy to Render.com (Recommended)
+
+See [DEPLOY_RENDER.md](DEPLOY_RENDER.md) for detailed instructions.
+
+Quick steps:
+1. Push your code to GitHub
+2. Connect repository to Render.com
+3. Render will auto-detect `render.yaml`
+4. Set `OPENAI_API_KEY` in Render dashboard
+5. Deploy!
+
+Your service will be available at: `https://your-service.onrender.com`
+
+### Option 2: Local Development with Cloudflared
+
+For local testing, you can use cloudflared:
+
+```bash
+# Quick tunnel (no setup)
+cloudflared tunnel --url http://localhost:8000
+```
+
+Or set up a persistent tunnel:
 ```bash
 ./setup_cloudflared.sh
 ```
 
-2. **Edit the configuration**:
-   - Edit `~/.cloudflared/config.yml`
-   - Update the hostname with your domain:
-   ```yaml
-   - hostname: your-subdomain.yourdomain.com
-     service: http://localhost:8000
-   ```
-
-3. **Create DNS route** (if using custom domain):
-```bash
-cloudflared tunnel route dns mcu-green-agent your-subdomain.yourdomain.com
-```
-
-Alternatively, you can use a quick tunnel (no setup required):
-```bash
-cloudflared tunnel --url http://localhost:8000
-```
-
 ## Running the Server
 
-### Option 1: Using the start script (recommended)
+### Local Development
+
+1. **Set your OpenAI API key**:
+```bash
+export OPENAI_API_KEY="sk-your-api-key-here"
+```
+
+2. **Start the server**:
+```bash
+python a2a_server.py --host 0.0.0.0 --port 8000
+```
+
+The server will automatically:
+- Use `PORT` environment variable if set (for Render.com)
+- Fall back to port 8000 for local development
+- Load `.env` file if present
+
+### Using the Start Script (Local)
+
 ```bash
 ./start_server.sh
 ```
 
 This will:
 - Start the FastAPI server on port 8000
-- Start the Cloudflared tunnel
-- Show you the public URL
-
-### Option 2: Manual start
-
-1. **Start the FastAPI server**:
-```bash
-python a2a_server.py --host 0.0.0.0 --port 8000
-```
-
-2. **In another terminal, start Cloudflared**:
-```bash
-cloudflared tunnel run mcu-green-agent
-```
-
-Or for quick tunnel:
-```bash
-cloudflared tunnel --url http://localhost:8000
-```
+- Optionally start Cloudflared tunnel for local testing
 
 ## API Endpoints
 
@@ -216,17 +220,17 @@ cloudflared tunnel --url http://localhost:8000
 ## Integration with AgentBeats
 
 1. **Get your public URL**:
-   - Check `cloudflared.log` for the public URL
-   - Or use the URL from quick tunnel output
-   - Format: `https://xxxx-xxxx-xxxx.trycloudflare.com`
+   - **Render.com**: Your service URL (e.g., `https://mcu-green-agent.onrender.com`)
+   - **Local with Cloudflared**: Check `cloudflared.log` or quick tunnel output
 
 2. **Register with AgentBeats**:
    - Go to https://v2.agentbeats.org/main
    - Login with GitHub
-   - Register your green agent with the public URL
+   - Register your green agent with your public URL
 
 3. **AgentBeats will**:
-   - Send white agents to interact with your server
+   - Discover your agent via `/.well-known/agent.json`
+   - Generate/assign tasks to white agents
    - White agents will use `/a2a/task/init` and `/a2a/action` endpoints
    - Submit videos for evaluation via `/a2a/evaluate`
 
@@ -279,7 +283,13 @@ The code includes fallback logic, but you may need to modify it based on your sp
 - Check MineStudio installation: `pip show minestudio`
 - Review server logs for errors
 
-### Cloudflared issues
+### Deployment issues (Render.com)
+- Check build logs in Render dashboard
+- Verify `OPENAI_API_KEY` is set in environment variables
+- Check service logs for runtime errors
+- Ensure `render.yaml` is in your repository root
+
+### Local tunneling issues (Cloudflared)
 - Verify tunnel is running: `cloudflared tunnel list`
 - Check tunnel status: `cloudflared tunnel info mcu-green-agent`
 - Review cloudflared logs: `tail -f cloudflared.log`
