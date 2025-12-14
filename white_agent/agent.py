@@ -38,7 +38,14 @@ except ImportError as e:
 class MinecraftWhiteAgentExecutor(AgentExecutor):
     """White agent executor for performing Minecraft tasks."""
 
-    def __init__(self, output_dir: str = "./output"):
+    def __init__(self, output_dir: str = None):
+        # Get the directory where the script is located
+        script_dir = Path(__file__).parent.parent.absolute()
+
+        # Use absolute path relative to script location
+        if output_dir is None:
+            output_dir = script_dir / "output"
+
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -346,7 +353,7 @@ def start_white_agent(
     agent_name: str = "minecraft_white_agent",
     host: str = "localhost",
     port: int = 9002,
-    output_dir: str = "./output"
+    output_dir: str = None
 ):
     """
     Start the white agent A2A server.

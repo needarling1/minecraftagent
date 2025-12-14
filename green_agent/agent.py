@@ -170,7 +170,16 @@ def evaluate_video_with_vlm(
 class MinecraftGreenAgentExecutor(AgentExecutor):
     """Green agent executor for Minecraft benchmark assessments."""
 
-    def __init__(self, task_configs_dir: str = "./task_configs", criteria_dir: str = "./auto_eval/criteria_files"):
+    def __init__(self, task_configs_dir: str = None, criteria_dir: str = None):
+        # Get the directory where the script is located
+        script_dir = Path(__file__).parent.parent.absolute()
+
+        # Use absolute paths relative to script location
+        if task_configs_dir is None:
+            task_configs_dir = script_dir / "task_configs"
+        if criteria_dir is None:
+            criteria_dir = script_dir / "auto_eval" / "criteria_files"
+
         self.task_configs_dir = Path(task_configs_dir)
         self.criteria_dir = Path(criteria_dir)
 
@@ -234,7 +243,8 @@ class MinecraftGreenAgentExecutor(AgentExecutor):
             video_path = artifact_data.get('video_path')
             if 'video_base64' in artifact_data:
                 # Decode and save video
-                output_dir = Path("./output") / task_name
+                script_dir = Path(__file__).parent.parent.absolute()
+                output_dir = script_dir / "output" / task_name
                 output_dir.mkdir(parents=True, exist_ok=True)
                 video_path = str(output_dir / f"episode_{int(time.time())}.mp4")
 
@@ -306,8 +316,8 @@ def start_green_agent(
     agent_name: str = "minecraft_green_agent",
     host: str = "localhost",
     port: int = 9001,
-    task_configs_dir: str = "./task_configs",
-    criteria_dir: str = "./auto_eval/criteria_files"
+    task_configs_dir: str = None,
+    criteria_dir: str = None
 ):
     """
     Start the green agent A2A server.

@@ -36,7 +36,7 @@ def get_task_name_from_path(config_path: str) -> str:
     return Path(config_path).stem
 
 
-def find_task_config(task_name: str, difficulty: str = "simple", task_configs_dir: str = "./task_configs") -> Optional[str]:
+def find_task_config(task_name: str, difficulty: str = "simple", task_configs_dir: str = None) -> Optional[str]:
     """
     Find the configuration file for a given task name and difficulty.
 
@@ -48,13 +48,18 @@ def find_task_config(task_name: str, difficulty: str = "simple", task_configs_di
     Returns:
         Path to the configuration file if found, None otherwise
     """
+    # Default to script directory if not provided
+    if task_configs_dir is None:
+        script_dir = Path(__file__).parent.parent.absolute()
+        task_configs_dir = script_dir / "task_configs"
+
     config_path = Path(task_configs_dir) / difficulty / f"{task_name}.yaml"
     if config_path.exists():
         return str(config_path)
     return None
 
 
-def list_available_tasks(difficulty: str = "simple", task_configs_dir: str = "./task_configs") -> List[str]:
+def list_available_tasks(difficulty: str = "simple", task_configs_dir: str = None) -> List[str]:
     """
     List all available tasks for a given difficulty.
 
@@ -65,6 +70,11 @@ def list_available_tasks(difficulty: str = "simple", task_configs_dir: str = "./
     Returns:
         List of task names
     """
+    # Default to script directory if not provided
+    if task_configs_dir is None:
+        script_dir = Path(__file__).parent.parent.absolute()
+        task_configs_dir = script_dir / "task_configs"
+
     config_dir = Path(task_configs_dir) / difficulty
     if not config_dir.exists():
         return []
