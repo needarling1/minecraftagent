@@ -112,10 +112,16 @@ After completing the task, please respond with:
 
     white_response = text_parts[0]
     print(f"Green Agent: Received response from white agent")
+    print(f"DEBUG: Response length: {len(white_response)}")
+    print(f"DEBUG: First 500 chars:\n{white_response[:500]}")
+    print(f"DEBUG: Last 500 chars:\n{white_response[-500:]}")
 
     # Parse video artifact
     tags = parse_tags(white_response)
+    print(f"DEBUG: Tags found: {list(tags.keys())}")
+
     if 'video_artifact' not in tags:
+        print(f"DEBUG: Full response:\n{white_response}")
         raise ValueError("White agent did not return video_artifact")
 
     artifact_data = json.loads(tags['video_artifact'])
