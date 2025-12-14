@@ -1,13 +1,24 @@
 """Green agent implementation - manages Minecraft benchmark assessment and evaluation."""
 
 import uvicorn
-import tomllib
 import json
 import time
 import base64
 import os
 from pathlib import Path
 from typing import Optional
+import sys
+
+# Handle tomllib for Python <3.11
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    try:
+        import tomli as tomllib
+    except ImportError:
+        raise ImportError(
+            "tomli is required for Python <3.11. Install with: pip install tomli"
+        )
 
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
