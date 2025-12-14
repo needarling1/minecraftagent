@@ -1,14 +1,32 @@
-fastapi>=0.104.0
-uvicorn[standard]>=0.24.0
-pydantic>=2.0.0
-python-multipart>=0.0.6
-opencv-python>=4.8.0
-openai>=1.0.0
-requests>=2.31.0
-pillow>=10.0.0
-pyyaml>=6.0
-av>=10.0.0
-numpy>=1.24.0
-minestudio>=0.1.0
-python-dotenv>=1.0.0
+# Core A2A Protocol
+a2a-sdk[http-server]>=0.3.8
 
+# Web Server
+uvicorn>=0.37.0
+starlette>=0.41.0
+
+# CLI
+typer>=0.19.2
+
+# OpenAI API for VLM evaluation
+openai>=1.0.0
+
+# Video Processing
+opencv-python>=4.8.0
+Pillow>=10.0.0
+av>=10.0.0
+
+# Configuration
+python-dotenv>=1.0.0
+pyyaml>=6.0
+
+# HTTP Client
+httpx>=0.25.0
+
+# MineStudio (installed separately from MCU folder)
+# Note: MineStudio should be installed following MCU instructions:
+# conda install --channel=conda-forge openjdk=8 -y
+# pip install minestudio
+
+# Additional utilities
+requests>=2.31.0

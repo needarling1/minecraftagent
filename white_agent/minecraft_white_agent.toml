@@ -1,0 +1,28 @@
+name = "minecraft_white_agent"
+description = "White agent that executes Minecraft tasks using MineStudio and generates video recordings for evaluation"
+version = "1.0.0"
+
+defaultInputModes = ["text"]
+defaultOutputModes = ["text"]
+
+[capabilities]
+streaming = false
+
+[[skills]]
+id = "minecraft_task_execution"
+name = "Minecraft Task Execution"
+description = """
+Executes Minecraft tasks across diverse categories including:
+- Combat: Fighting mobs, hunting animals
+- Crafting: Creating tools, items, and blocks
+- Mining: Extracting resources from the environment
+- Building: Constructing structures and designs
+- Tool Use: Utilizing various Minecraft tools effectively
+- Exploration: Navigating and discovering the world
+- Finding: Locating specific blocks, biomes, or structures
+
+Generates video recordings of task execution for VLM-based evaluation.
+Supports both Simple and Hard difficulty modes with configurable environments.
+"""
+tags = ["white agent", "minecraft", "task execution", "MineStudio"]
+examples = []

@@ -4,39 +4,72 @@ __pycache__/
 *$py.class
 *.so
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
 venv/
-env/
 ENV/
+env/
 .venv
 
 # Environment variables
 .env
 .env.local
 
+# Output directories
+output/
+vlm_rating_res/
+*.mp4
+*.avi
+
+# Logs
+*.log
+logs/
+
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-
-# Logs
-*.log
-server.log
-cloudflared.log
-
-# Output files
-output/
-vlm_rating_res/
-
-# Temporary files
-*.tmp
-*.temp
+*~
 
 # OS
 .DS_Store
 Thumbs.db
 
-# API Keys (never commit these!)
-*.key
-secrets.txt
+# MineStudio
+pretrained/
+*.model
+*.weights
 
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Coverage
+.coverage
+htmlcov/
+
+# pytest
+.pytest_cache/
+
+# mypy
+.mypy_cache/

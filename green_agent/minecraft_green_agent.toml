@@ -1,0 +1,43 @@
+name = "minecraft_green_agent"
+description = "Green agent for evaluating Minecraft agents using VLM-based assessment across 80+ tasks"
+version = "1.0.0"
+
+defaultInputModes = ["text"]
+defaultOutputModes = ["text"]
+
+[capabilities]
+streaming = false
+
+[[skills]]
+id = "minecraft_assessment"
+name = "Minecraft Agent Assessment"
+description = """
+Assess Minecraft agents across diverse tasks including combat, crafting, mining, building, and exploration.
+Evaluates agent performance using VLM-based video analysis with criteria covering:
+- Task Progress: Completion of key task steps
+- Action Control: Precision and relevance of actions
+- Error Recognition and Correction: Ability to identify and fix mistakes
+- Creative Attempts: Innovative problem-solving
+- Task Completion Efficiency: Speed and resource management
+- Material Selection and Usage: Appropriate tool and material usage
+
+Supports 80+ atomic tasks and 20 compositional tasks across Simple and Hard difficulty modes.
+"""
+tags = ["green agent", "minecraft", "assessment", "evaluation", "VLM"]
+examples = ["""
+Your task is to assess the Minecraft agent at:
+<white_agent_url>
+http://localhost:9002/
+</white_agent_url>
+
+Please evaluate the following task:
+<task_name>
+build_a_house
+</task_name>
+<difficulty>
+simple
+</difficulty>
+<max_steps>
+12000
+</max_steps>
+"""]
