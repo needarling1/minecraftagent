@@ -138,18 +138,18 @@ class MinecraftWhiteAgentExecutor(AgentExecutor):
                 "timestamp": time.time()
             }
 
-            response_message = f"""
-Task execution complete!
-
-<video_artifact>
-{json.dumps(artifact_data, indent=2)}
-</video_artifact>
+            # IMPORTANT: Must include <video_artifact> tags for green agent to parse
+            response_message = f"""Task execution complete!
 
 Task: {task_name}
 Difficulty: {difficulty}
 Steps Taken: {steps_taken}
 Completed: {completed}
 Video saved to: {video_path}
+
+<video_artifact>
+{json.dumps(artifact_data)}
+</video_artifact>
 """
 
             await event_queue.enqueue_event(
