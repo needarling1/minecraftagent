@@ -309,11 +309,29 @@ Video saved to: {video_path}
         task_output_dir.mkdir(parents=True, exist_ok=True)
         video_path = task_output_dir / f"mock_episode_{int(time.time())}.mp4"
 
-        # Create a minimal valid MP4 file (empty/black video)
-        # In production, you'd want actual video data
-        with open(video_path, 'wb') as f:
-            # Write minimal MP4 header (this is just a placeholder)
-            f.write(b'\x00\x00\x00\x20ftypmp42\x00\x00\x00\x00mp42mp41')
+        # Create a proper minimal black video using OpenCV
+        try:
+            import cv2
+            import numpy as np
+
+            # Create a 30-frame black video (640x480, 1 second at 30fps)
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            out = cv2.VideoWriter(str(video_path), fourcc, 30.0, (640, 480))
+
+            # Write 30 black frames
+            black_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+            for _ in range(30):
+                out.write(black_frame)
+
+            out.release()
+            print(f"White Agent: Created mock video with 30 black frames at {video_path}")
+
+        except Exception as e:
+            print(f"Warning: Could not create proper mock video: {e}")
+            # Fallback to minimal MP4 header
+            with open(video_path, 'wb') as f:
+                # Write minimal MP4 header (this is just a placeholder)
+                f.write(b'\x00\x00\x00\x20ftypmp42\x00\x00\x00\x00mp42mp41')
 
         steps_taken = max_steps
         completed = True
