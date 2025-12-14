@@ -230,9 +230,10 @@ Video saved to: {video_path}
         )
 
         print(f"White Agent: Environment initialized, starting episode...")
-        await event_queue.enqueue_event(
-            new_agent_text_message(f"MineStudio environment initialized, running {max_steps} steps...")
-        )
+        # Don't send intermediate messages - only the final response matters
+        # await event_queue.enqueue_event(
+        #     new_agent_text_message(f"MineStudio environment initialized, running {max_steps} steps...")
+        # )
 
         # Load agent policy (using VPT or other model)
         # Note: You'll need to have the model files available
@@ -272,9 +273,10 @@ Video saved to: {video_path}
             # Progress update every 1000 steps
             if (step + 1) % 1000 == 0:
                 print(f"White Agent: Step {step + 1}/{max_steps}")
-                await event_queue.enqueue_event(
-                    new_agent_text_message(f"Progress: {step + 1}/{max_steps} steps")
-                )
+                # Don't send intermediate messages - only the final response matters
+                # await event_queue.enqueue_event(
+                #     new_agent_text_message(f"Progress: {step + 1}/{max_steps} steps")
+                # )
 
         env.close()
         print(f"White Agent: Episode complete after {steps_taken} steps")
@@ -301,9 +303,10 @@ Video saved to: {video_path}
             Tuple of (video_path, steps_taken, completed)
         """
         print("White Agent: Running in MOCK mode (MineStudio not available)")
-        await event_queue.enqueue_event(
-            new_agent_text_message("Running in mock mode - MineStudio not available")
-        )
+        # Don't send intermediate messages - only the final response matters
+        # await event_queue.enqueue_event(
+        #     new_agent_text_message("Running in mock mode - MineStudio not available")
+        # )
 
         # Create a dummy video file
         task_output_dir = self.output_dir / task_name
