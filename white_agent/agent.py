@@ -99,9 +99,10 @@ class MinecraftWhiteAgentExecutor(AgentExecutor):
             print(f"White Agent: Task description: {task_description}")
             print(f"White Agent: Init commands: {len(custom_init_commands)} commands")
 
-            await event_queue.enqueue_event(
-                new_agent_text_message(f"Starting task execution: {task_name}\nDescription: {task_description}")
-            )
+            # Note: Don't send intermediate messages - only send the final complete response
+            # await event_queue.enqueue_event(
+            #     new_agent_text_message(f"Starting task execution: {task_name}\nDescription: {task_description}")
+            # )
 
             # Execute task with MineStudio
             if MINESTUDIO_AVAILABLE:
