@@ -12,9 +12,12 @@ import pdb
 import json
 import datetime
 import argparse
+from pathlib import Path
 
 
-with open('./prompt/single_rating_prompt.txt', 'r', encoding='utf-8') as file:  
+# Use absolute path to prompt file
+prompt_file = Path(__file__).parent / 'prompt' / 'single_rating_prompt.txt'
+with open(prompt_file, 'r', encoding='utf-8') as file:
     system_content = file.read()
 metric = []
 
