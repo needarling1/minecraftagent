@@ -27,7 +27,7 @@ tags = ["green agent", "minecraft", "assessment", "evaluation", "VLM"]
 examples = ["""
 Your task is to assess the Minecraft agent at:
 <white_agent_url>
-http://localhost:9002/
+https://white.mcubenchmark.org/
 </white_agent_url>
 
 Please evaluate the following task:
