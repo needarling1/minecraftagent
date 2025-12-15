@@ -340,9 +340,15 @@ def start_green_agent(
     # Load agent card
     agent_card_dict = load_agent_card_toml(agent_name)
 
-    # When running under earthshaker controller, agent listens on localhost
-    # and controller manages the public URL. Don't override the URL.
-    url = f"http://{host}:{port}"
+    # Use PUBLIC_URL environment variable if set (for AgentBeats deployment)
+    # Otherwise use localhost (for local testing)
+    public_url = os.getenv("PUBLIC_URL")
+    if public_url:
+        url = public_url
+        print(f"Using public URL from environment: {url}")
+    else:
+        url = f"http://{host}:{port}"
+        print(f"Using local URL: {url}")
     agent_card_dict["url"] = url
 
     # Create request handler

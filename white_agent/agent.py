@@ -410,9 +410,15 @@ def start_white_agent(
     """
     print(f"Starting Minecraft White Agent on {host}:{port}...")
 
-    # When running under earthshaker controller, agent listens on localhost
-    # and controller manages the public URL. Don't override the URL.
-    url = f"http://{host}:{port}"
+    # Use PUBLIC_URL environment variable if set (for AgentBeats deployment)
+    # Otherwise use localhost (for local testing)
+    public_url = os.getenv("PUBLIC_URL")
+    if public_url:
+        url = public_url
+        print(f"Using public URL from environment: {url}")
+    else:
+        url = f"http://{host}:{port}"
+        print(f"Using local URL: {url}")
     card = prepare_white_agent_card(url)
 
     # Create request handler
