@@ -91,8 +91,12 @@ def save_data_json(ans, video_path_a, task_name):
     metric.append(metric_dict)
     result_dict['video_path'] = video_path_a
     result_dict['task_name'] = task_name
-    
-    out_file = os.path.join('vlm_rating_res', task_name+'.json')
+
+    # Create output directory if it doesn't exist
+    output_dir = Path(__file__).parent / 'vlm_rating_res'
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    out_file = output_dir / f'{task_name}.json'
     with open(out_file, 'w') as f:
         json.dump([result_dict, ans], f, indent = 4)
 
