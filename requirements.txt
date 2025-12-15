@@ -4,6 +4,7 @@ a2a-sdk[http-server]>=0.3.8
 # Web Server
 uvicorn>=0.37.0
 starlette>=0.41.0
+fastapi>=0.104.0
 
 # CLI
 typer>=0.19.2
