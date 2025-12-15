@@ -410,12 +410,9 @@ def start_white_agent(
     """
     print(f"Starting Minecraft White Agent on {host}:{port}...")
 
-    # Use CLOUDRUN_HOST if set (for AgentBeats deployment), otherwise use local host:port
-    cloudrun_host = os.getenv("CLOUDRUN_HOST")
-    if cloudrun_host:
-        url = f"https://{cloudrun_host}"
-    else:
-        url = f"http://{host}:{port}"
+    # When running under earthshaker controller, agent listens on localhost
+    # and controller manages the public URL. Don't override the URL.
+    url = f"http://{host}:{port}"
     card = prepare_white_agent_card(url)
 
     # Create request handler
