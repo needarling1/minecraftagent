@@ -210,8 +210,20 @@ Video saved to: {video_path}
                 self.commands = commands
 
             def after_reset(self, sim, obs, info):
-                for cmd in self.commands:
-                    sim.execute_command(cmd)
+                # Try to execute commands if the method exists
+                # Note: Command execution API varies by MineStudio version
+                try:
+                    if hasattr(sim, 'execute_command'):
+                        for cmd in self.commands:
+                            sim.execute_command(cmd)
+                    elif hasattr(sim, 'env') and hasattr(sim.env, 'execute_command'):
+                        for cmd in self.commands:
+                            sim.env.execute_command(cmd)
+                    else:
+                        print(f"White Agent: Command execution not available in this MineStudio version")
+                        print(f"White Agent: Skipping {len(self.commands)} initialization commands")
+                except Exception as e:
+                    print(f"White Agent: Warning - could not execute commands: {e}")
                 return obs, info
 
         class TaskCallback(MinecraftCallback):
