@@ -339,7 +339,13 @@ def start_green_agent(
 
     # Load agent card
     agent_card_dict = load_agent_card_toml(agent_name)
-    url = f"http://{host}:{port}"
+
+    # Use CLOUDRUN_HOST if set (for AgentBeats deployment), otherwise use local host:port
+    cloudrun_host = os.getenv("CLOUDRUN_HOST")
+    if cloudrun_host:
+        url = f"https://{cloudrun_host}"
+    else:
+        url = f"http://{host}:{port}"
     agent_card_dict["url"] = url
 
     # Create request handler
