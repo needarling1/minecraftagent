@@ -1,5 +1,6 @@
 """CLI entry point for Minecraft Benchmark - cs194 project."""
 
+import os
 import typer
 import asyncio
 from pathlib import Path
@@ -16,20 +17,28 @@ app = typer.Typer(
 
 @app.command()
 def green(
-    host: str = typer.Option("localhost", help="Host to bind to"),
-    port: int = typer.Option(9001, help="Port to bind to"),
+    host: str = typer.Option(None, help="Host to bind to (uses $HOST env var if set)"),
+    port: int = typer.Option(None, help="Port to bind to (uses $AGENT_PORT env var if set)"),
 ):
     """Start the green agent (evaluator) server."""
+    # Support AgentBeats controller environment variables
+    host = host or os.getenv("HOST", "localhost")
+    port = port or int(os.getenv("AGENT_PORT", "9001"))
+
     typer.echo(f"Starting green agent on {host}:{port}")
     start_green_agent(host=host, port=port)
 
 
 @app.command()
 def white(
-    host: str = typer.Option("localhost", help="Host to bind to"),
-    port: int = typer.Option(9002, help="Port to bind to"),
+    host: str = typer.Option(None, help="Host to bind to (uses $HOST env var if set)"),
+    port: int = typer.Option(None, help="Port to bind to (uses $AGENT_PORT env var if set)"),
 ):
     """Start the white agent (task executor) server."""
+    # Support AgentBeats controller environment variables
+    host = host or os.getenv("HOST", "localhost")
+    port = port or int(os.getenv("AGENT_PORT", "9002"))
+
     typer.echo(f"Starting white agent on {host}:{port}")
     start_white_agent(host=host, port=port)
 
