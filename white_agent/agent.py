@@ -106,14 +106,24 @@ class MinecraftWhiteAgentExecutor(AgentExecutor):
 
             # Execute task with MineStudio
             if MINESTUDIO_AVAILABLE:
-                video_path, steps_taken, completed = await self._execute_with_minestudio(
-                    task_name=task_name,
-                    difficulty=difficulty,
-                    custom_init_commands=custom_init_commands,
-                    task_description=task_description,
-                    max_steps=max_steps,
-                    event_queue=event_queue
-                )
+                try:
+                    video_path, steps_taken, completed = await self._execute_with_minestudio(
+                        task_name=task_name,
+                        difficulty=difficulty,
+                        custom_init_commands=custom_init_commands,
+                        task_description=task_description,
+                        max_steps=max_steps,
+                        event_queue=event_queue
+                    )
+                except (EOFError, Exception) as e:
+                    # Fall back to mock mode if MineStudio fails
+                    print(f"White Agent: MineStudio execution failed ({str(e)}), falling back to mock mode")
+                    video_path, steps_taken, completed = await self._execute_mock(
+                        task_name=task_name,
+                        difficulty=difficulty,
+                        max_steps=max_steps,
+                        event_queue=event_queue
+                    )
             else:
                 # Mock execution for testing without MineStudio
                 video_path, steps_taken, completed = await self._execute_mock(

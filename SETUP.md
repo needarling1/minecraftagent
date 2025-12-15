@@ -20,7 +20,17 @@ pip install -r requirements.txt
 
 # Install MineStudio
 pip install minestudio
+
+# Download MineStudio simulator engine (required for actual Minecraft execution)
+python -c "from minestudio.simulator import MinecraftSim; MinecraftSim(obs_size=(128,128))"
+# When prompted "do you want to download it from huggingface (Y/N)?", type Y
+
+# Or auto-download without prompting:
+export MINESTUDIO_AUTO_DOWNLOAD=1
+python -c "from minestudio.simulator import MinecraftSim; MinecraftSim(obs_size=(128,128))"
 ```
+
+**Note:** The simulator engine download is ~500MB and may take a few minutes. If you skip this step, the white agent will run in mock mode (generating black test videos).
 
 ### 2. Configure Environment
 
@@ -251,7 +261,7 @@ Evaluation Scores:
 
 ## Troubleshooting
 
-### Issue: "MineStudio not available"
+### Issue: "MineStudio not available" or "EOF when reading a line"
 
 **Solution:**
 ```bash
@@ -259,11 +269,18 @@ Evaluation Scores:
 pip uninstall minestudio
 pip install minestudio
 
+# Download simulator engine
+python -c "from minestudio.simulator import MinecraftSim; MinecraftSim(obs_size=(128,128))"
+# Type Y when prompted
+
 # Verify Java
 java -version  # Should show Java 8
 
 # Check display
 echo $DISPLAY  # Should show :0 or similar
+
+# If you get EOFError, the simulator engine needs to be downloaded
+# Run the download command above before starting the agents
 ```
 
 ### Issue: "OpenAI API rate limit"
