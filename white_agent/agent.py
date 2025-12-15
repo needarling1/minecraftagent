@@ -410,15 +410,14 @@ def start_white_agent(
     """
     print(f"Starting Minecraft White Agent on {host}:{port}...")
 
-    # Use PUBLIC_URL environment variable if set (for AgentBeats deployment)
-    # Otherwise use localhost (for local testing)
-    public_url = os.getenv("PUBLIC_URL")
-    if public_url:
-        url = public_url
-        print(f"Using public URL from environment: {url}")
+    # Use AGENT_URL from earthshaker if available, otherwise localhost
+    agent_url = os.getenv("AGENT_URL")
+    if agent_url:
+        url = agent_url
+        print(f"Using agent URL from earthshaker: {url}")
     else:
         url = f"http://{host}:{port}"
-        print(f"Using local URL: {url}")
+        print(f"Using local URL for testing: {url}")
     card = prepare_white_agent_card(url)
 
     # Create request handler
