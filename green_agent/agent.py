@@ -199,13 +199,13 @@ class MinecraftGreenAgentExecutor(AgentExecutor):
 
         # Extract parameters
         white_agent_url = tags.get('white_agent_url')
-        task_name = tags.get('task_name')
+        task_name = tags.get('task_name', 'collect_wood')  # Default task for AgentBeats
         difficulty = tags.get('difficulty', 'simple')
         max_steps = int(tags.get('max_steps', '12000'))
 
-        if not white_agent_url or not task_name:
+        if not white_agent_url:
             await event_queue.enqueue_event(
-                new_agent_text_message("Error: Missing white_agent_url or task_name in request")
+                new_agent_text_message("Error: Missing white_agent_url in request")
             )
             return
 
