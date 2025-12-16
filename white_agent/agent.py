@@ -263,8 +263,8 @@ Video saved to: {video_path}
         try:
             from minestudio.models import load_vpt_policy
             vpt_policy = load_vpt_policy(
-                model_path="../MCU/pretrained/foundation-model-2x.model",
-                weights_path="../MCU/pretrained/foundation-model-2x.weights"
+                model_path="./MCU/pretrained/foundation-model-2x.model",
+                weights_path="./MCU/pretrained/foundation-model-2x.weights"
             ).to("cuda")
             print("White Agent: Loaded VPT policy for low-level control")
         except Exception as e:
