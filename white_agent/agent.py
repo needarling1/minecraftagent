@@ -257,32 +257,36 @@ Video saved to: {video_path}
         #     new_agent_text_message(f"MineStudio environment initialized, running {max_steps} steps...")
         # )
 
-        # Load agent policy (using VPT or other model)
+        # Load agent policy (Hybrid: LLM planning + VPT execution)
         # Note: You'll need to have the model files available
+        vpt_policy = None
         try:
             from minestudio.models import load_vpt_policy
-            policy = load_vpt_policy(
+            vpt_policy = load_vpt_policy(
                 model_path="../MCU/pretrained/foundation-model-2x.model",
                 weights_path="../MCU/pretrained/foundation-model-2x.weights"
             ).to("cuda")
-            print("White Agent: Loaded VPT policy")
+            print("White Agent: Loaded VPT policy for low-level control")
         except Exception as e:
             print(f"Warning: Could not load VPT policy: {e}")
-            print("Using random policy instead")
-            policy = None
+            print("Hybrid agent will use LLM-only mode")
 
-        # Run episode
+        # Initialize hybrid policy (LLM planner + VPT executor)
+        from white_agent.hybrid_policy import HybridPolicy
+        policy = HybridPolicy(vpt_policy=vpt_policy, model="gpt-4o")
+
+        # Initialize the plan for this task
+        policy.initialize_plan(task_description)
+
+        # Run episode with hybrid policy
         obs, info = env.reset()
         memory = None
         steps_taken = 0
         completed = False
 
         for step in range(max_steps):
-            if policy is not None:
-                action, memory = policy.get_action(obs, memory, input_shape='*')
-            else:
-                # Random actions as fallback
-                action = env.action_space.sample()
+            # Hybrid policy handles planning and execution
+            action, memory = policy.get_action(obs, memory, step=step, max_steps=max_steps)
 
             obs, reward, terminated, truncated, info = env.step(action)
             steps_taken = step + 1
@@ -302,6 +306,13 @@ Video saved to: {video_path}
 
         env.close()
         print(f"White Agent: Episode complete after {steps_taken} steps")
+
+        # Save reasoning summary for documentation
+        reasoning_summary = policy.get_reasoning_summary()
+        reasoning_file = task_output_dir / f"reasoning_{task_name}.md"
+        with open(reasoning_file, 'w') as f:
+            f.write(reasoning_summary)
+        print(f"White Agent: Reasoning saved to {reasoning_file}")
 
         # Find the generated video
         video_files = list(task_output_dir.glob("episode_*.mp4"))
