@@ -97,7 +97,7 @@ Please evaluate the following task:
 
     print("\nSending request...")
     try:
-        response = await send_message(green_url, assessment_request, timeout=900.0)  # 15 min timeout
+        response = await send_message(green_url, assessment_request, timeout=2400.0)  # 15 min timeout
 
         # Parse response
         from a2a.types import SendMessageSuccessResponse, Message

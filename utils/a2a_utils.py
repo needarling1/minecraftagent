@@ -34,7 +34,7 @@ async def get_agent_card(url: str) -> Optional[AgentCard]:
     return card
 
 
-async def wait_agent_ready(url: str, timeout: int = 30) -> bool:
+async def wait_agent_ready(url: str, timeout: int = 3000) -> bool:
     """
     Wait until an A2A agent is ready by checking its agent card.
 
@@ -86,8 +86,8 @@ async def send_message(
 
     card = await get_agent_card(url)
     # Use httpx.Timeout to set all timeout types
-    httpx_client = httpx.AsyncClient(timeout=httpx.Timeout(timeout, read=timeout, write=timeout, connect=60.0))
-    print(f"[TIMING] send_message: httpx client configured with read={timeout}s, write={timeout}s, connect=60s")
+    httpx_client = httpx.AsyncClient(timeout=httpx.Timeout(timeout, read=timeout, write=timeout, connect=6000.0))
+    print(f"[TIMING] send_message: httpx client configured with read={timeout}s, write={timeout}s, connect=6000s")
     client = A2AClient(httpx_client=httpx_client, agent_card=card)
 
     message_id = uuid.uuid4().hex
