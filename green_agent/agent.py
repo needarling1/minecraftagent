@@ -193,11 +193,14 @@ class MinecraftGreenAgentExecutor(AgentExecutor):
 
     async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Execute assessment request from AgentBeats or other orchestrator."""
-        print("Green Agent: Received assessment request")
+        import time
+        start_time = time.time()
+        print(f"[TIMING] Green Agent: Received assessment request at {start_time}")
 
         # Parse the request
         user_input = context.get_user_input()
         tags = parse_tags(user_input)
+        print(f"[TIMING] Parsed request in {time.time() - start_time:.2f}s")
 
         # Extract parameters
         white_agent_url = tags.get('white_agent_url')
@@ -240,6 +243,9 @@ class MinecraftGreenAgentExecutor(AgentExecutor):
                 new_agent_text_message(f"Requesting white agent to perform task: {task_name}...")
             )
 
+            white_start = time.time()
+            print(f"[TIMING] Calling white agent at {white_start}")
+
             artifact_data = await request_white_agent_evaluation(
                 white_agent_url,
                 task_name,
@@ -247,6 +253,9 @@ class MinecraftGreenAgentExecutor(AgentExecutor):
                 task_config_path,
                 max_steps
             )
+
+            white_duration = time.time() - white_start
+            print(f"[TIMING] White agent responded in {white_duration:.2f}s (elapsed: {time.time() - start_time:.2f}s)")
 
             # Save video if base64 encoded
             video_path = artifact_data.get('video_path')
@@ -268,11 +277,17 @@ class MinecraftGreenAgentExecutor(AgentExecutor):
                 new_agent_text_message(f"Evaluating video with VLM...")
             )
 
+            eval_start = time.time()
+            print(f"[TIMING] Starting VLM evaluation at {eval_start} (elapsed: {eval_start - start_time:.2f}s)")
+
             scores = evaluate_video_with_vlm(
                 task_name,
                 video_path,
                 str(criteria_file)
             )
+
+            eval_duration = time.time() - eval_start
+            print(f"[TIMING] VLM evaluation completed in {eval_duration:.2f}s (total elapsed: {time.time() - start_time:.2f}s)")
 
             # Prepare results
             result_data = {
@@ -305,7 +320,9 @@ Full Results:
                 new_agent_text_message(result_message)
             )
 
-            print("Green Agent: Assessment complete")
+            total_duration = time.time() - start_time
+            print(f"[TIMING] Assessment complete! Total time: {total_duration:.2f}s")
+            print(f"[TIMING] Breakdown - White agent: {white_duration:.2f}s, VLM eval: {eval_duration:.2f}s")
 
         except Exception as e:
             error_msg = f"Error during assessment: {str(e)}"

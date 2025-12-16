@@ -80,9 +80,14 @@ async def send_message(
     Returns:
         The response from the agent
     """
+    import time
+    send_start = time.time()
+    print(f"[TIMING] send_message: Sending to {url} with timeout={timeout}s at {send_start}")
+
     card = await get_agent_card(url)
     # Use httpx.Timeout to set all timeout types
     httpx_client = httpx.AsyncClient(timeout=httpx.Timeout(timeout, read=timeout, write=timeout, connect=60.0))
+    print(f"[TIMING] send_message: httpx client configured with read={timeout}s, write={timeout}s, connect=60s")
     client = A2AClient(httpx_client=httpx_client, agent_card=card)
 
     message_id = uuid.uuid4().hex
@@ -98,6 +103,9 @@ async def send_message(
     request_id = uuid.uuid4().hex
     req = SendMessageRequest(id=request_id, params=params)
     response = await client.send_message(request=req)
+
+    send_duration = time.time() - send_start
+    print(f"[TIMING] send_message: Received response in {send_duration:.2f}s")
     return response
 
 

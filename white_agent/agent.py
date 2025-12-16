@@ -51,7 +51,9 @@ class MinecraftWhiteAgentExecutor(AgentExecutor):
 
     async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
         """Execute a Minecraft task and return video artifact."""
-        print("White Agent: Received task request")
+        import time
+        start_time = time.time()
+        print(f"[TIMING] White Agent: Received task request at {start_time}")
 
         # Parse the request
         user_input = context.get_user_input()
@@ -91,6 +93,8 @@ class MinecraftWhiteAgentExecutor(AgentExecutor):
         print(f"White Agent: Executing task '{task_name}' ({difficulty}) for {max_steps} steps")
 
         try:
+            print(f"[TIMING] White Agent: Starting task execution (elapsed: {time.time() - start_time:.2f}s)")
+
             # Load task configuration
             task_config = load_task_config(task_config_path)
             custom_init_commands = task_config.get('custom_init_commands', [])
@@ -163,11 +167,15 @@ Video saved to: {video_path}
 </video_artifact>
 """
 
+            total_duration = time.time() - start_time
+            print(f"[TIMING] White Agent: Task execution completed in {total_duration:.2f}s")
+            print(f"[TIMING] White Agent: Sending response with video artifact")
+
             await event_queue.enqueue_event(
                 new_agent_text_message(response_message)
             )
 
-            print(f"White Agent: Task complete, video saved to {video_path}")
+            print(f"[TIMING] White Agent: Response sent, total time: {total_duration:.2f}s")
 
         except Exception as e:
             error_msg = f"Error executing task: {str(e)}"
