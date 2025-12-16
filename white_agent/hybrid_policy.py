@@ -70,8 +70,7 @@ Respond in JSON format:
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
-                response_format={"type": "json_object"},
-                temperature=0.7
+                response_format={"type": "json_object"}
             )
 
             plan = json.loads(response.choices[0].message.content)
@@ -182,8 +181,7 @@ Example: ["move_forward", "move_forward", "attack", "use"]"""
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ],
-                response_format={"type": "json_object"},
-                temperature=0.5
+                response_format={"type": "json_object"}
             )
 
             result = json.loads(response.choices[0].message.content)
