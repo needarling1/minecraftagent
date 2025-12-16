@@ -262,10 +262,11 @@ Video saved to: {video_path}
         vpt_policy = None
         try:
             from minestudio.models import load_vpt_policy
+            device = "cuda" if torch.cuda.is_available() else "cpu"
             vpt_policy = load_vpt_policy(
-                model_path="./MCU/pretrained/foundation-model-2x.model",
-                weights_path="./MCU/pretrained/foundation-model-2x.weights"
-            ).to("cuda")
+                model_path="../MCU/pretrained/foundation-model-2x.model",
+                weights_path="../MCU/pretrained/foundation-model-2x.weights"
+            ).to("device")
             print("White Agent: Loaded VPT policy for low-level control")
         except Exception as e:
             print(f"Warning: Could not load VPT policy: {e}")
