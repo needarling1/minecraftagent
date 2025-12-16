@@ -145,7 +145,7 @@ class ActionMapper:
         "sprint": "sprint"
     }
 
-    def __init__(self, llm_client: OpenAI, model: str = "gpt-4o"):
+    def __init__(self, llm_client: OpenAI, model: str = "gpt-5-mini"):
         self.client = llm_client
         self.model = model
 
@@ -204,7 +204,7 @@ class HybridPolicy:
     4. VPT Executor: Executes low-level actions in Minecraft
     """
 
-    def __init__(self, vpt_policy=None, model: str = "gpt-4o"):
+    def __init__(self, vpt_policy=None, model: str = "gpt-5-mini"):
         self.vpt_policy = vpt_policy
         self.planner = SubtaskPlanner(model=model)
         self.state = StateManager()
