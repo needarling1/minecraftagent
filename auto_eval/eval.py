@@ -23,7 +23,11 @@ metric = []
 
 def fetch_gpt4(query):
     print('fetching gpt-5-mini...')
-    client = OpenAI(api_key='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')
+    # Read API key from environment variable (set in controller run.sh)
+    api_key = os.getenv('OPENAI_API_KEY')
+    if not api_key:
+        raise ValueError("OPENAI_API_KEY environment variable is not set")
+    client = OpenAI(api_key=api_key)
     
     completion = client.chat.completions.create(
         model="gpt-5-mini",

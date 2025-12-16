@@ -12,8 +12,17 @@ cd ~/dev/minecraftagent
 export DISPLAY=:99
 
 # Set OpenAI API key for VLM evaluation (GPT-4V)
-# TODO: Replace with your actual OpenAI API key
-export OPENAI_API_KEY=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
+# IMPORTANT: Set your OpenAI API key before running
+# Option 1: Set in your shell environment before running this script:
+#   export OPENAI_API_KEY=sk-your-key-here
+# Option 2: Create a .env file in the project root with:
+#   OPENAI_API_KEY=sk-your-key-here
+if [ -z "$OPENAI_API_KEY" ]; then
+    echo "ERROR: OPENAI_API_KEY environment variable is not set"
+    echo "Please set your OpenAI API key before running this script"
+    exit 1
+fi
+export OPENAI_API_KEY
 
 # Start the green agent
 # Earthshaker will set $HOST, $AGENT_PORT, and $AGENT_URL environment variables
