@@ -11,7 +11,7 @@ from pathlib import Path
 class SubtaskPlanner:
     """LLM-based high-level task planner using chain-of-thought reasoning."""
 
-    def __init__(self, model: str = "gpt-4o"):
+    def __init__(self, model: str = "gpt-5-mini"):
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.model = model
 
