@@ -97,7 +97,9 @@ After completing the task, please respond with:
     print(f"Task: {task_name} ({difficulty})")
 
     # Send request to white agent (with longer timeout for task execution)
-    response = await send_message(white_agent_url, request_message, timeout=600.0)
+    # Timeout needs to accommodate: MineStudio simulation + LLM planning + video encoding
+    # 12000 steps ~= 20-30 min with hybrid agent
+    response = await send_message(white_agent_url, request_message, timeout=2400.0)  # 40 minutes
 
     # Parse response
     res_root = response.root
@@ -201,7 +203,8 @@ class MinecraftGreenAgentExecutor(AgentExecutor):
         white_agent_url = tags.get('white_agent_url')
         task_name = tags.get('task_name', 'collect_wood')  # Default task for AgentBeats
         difficulty = tags.get('difficulty', 'simple')
-        max_steps = int(tags.get('max_steps', '12000'))
+        # Reduced default steps for faster evaluation (12000 takes ~30 min with hybrid agent)
+        max_steps = int(tags.get('max_steps', '6000'))
 
         if not white_agent_url:
             await event_queue.enqueue_event(

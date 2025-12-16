@@ -65,7 +65,7 @@ async def send_message(
     message: str,
     task_id: Optional[str] = None,
     context_id: Optional[str] = None,
-    timeout: float = 300.0
+    timeout: float = 2400.0
 ) -> SendMessageResponse:
     """
     Send a message to an A2A agent.
@@ -75,13 +75,14 @@ async def send_message(
         message: The text message to send
         task_id: Optional task ID for tracking
         context_id: Optional context ID for multi-turn conversations
-        timeout: Request timeout in seconds (default 300s for long-running tasks)
+        timeout: Request timeout in seconds (default 2400s = 40 min for long tasks)
 
     Returns:
         The response from the agent
     """
     card = await get_agent_card(url)
-    httpx_client = httpx.AsyncClient(timeout=timeout)
+    # Use httpx.Timeout to set all timeout types
+    httpx_client = httpx.AsyncClient(timeout=httpx.Timeout(timeout, read=timeout, write=timeout, connect=60.0))
     client = A2AClient(httpx_client=httpx_client, agent_card=card)
 
     message_id = uuid.uuid4().hex
