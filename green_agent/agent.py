@@ -48,7 +48,7 @@ async def request_white_agent_evaluation(
     task_name: str,
     difficulty: str,
     task_config_path: str,
-    max_steps: int = 12000
+    max_steps: int = 3000
 ) -> dict:
     """
     Request white agent to perform a task and submit video artifact.
@@ -204,7 +204,7 @@ class MinecraftGreenAgentExecutor(AgentExecutor):
         task_name = tags.get('task_name', 'collect_wood')  # Default task for AgentBeats
         difficulty = tags.get('difficulty', 'simple')
         # Reduced default steps for faster evaluation (12000 takes ~30 min with hybrid agent)
-        max_steps = int(tags.get('max_steps', '6000'))
+        max_steps = int(tags.get('max_steps', '3000'))
 
         if not white_agent_url:
             await event_queue.enqueue_event(
