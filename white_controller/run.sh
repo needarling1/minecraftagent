@@ -8,6 +8,9 @@ conda activate minecraft-benchmark
 # Navigate to project directory
 cd ~/dev/minecraftagent
 
+# Set virtual display for headless server (for MineStudio and video processing)
+export DISPLAY=:99
+
 # Start the white agent
 # Earthshaker will set $HOST, $AGENT_PORT, and $AGENT_URL environment variables
 python main.py white

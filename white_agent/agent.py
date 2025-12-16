@@ -273,7 +273,7 @@ Video saved to: {video_path}
 
         # Initialize hybrid policy (LLM planner + VPT executor)
         from white_agent.hybrid_policy import HybridPolicy
-        policy = HybridPolicy(vpt_policy=vpt_policy, model="gpt-4o")
+        policy = HybridPolicy(vpt_policy=vpt_policy, model="gpt-5-mini")
 
         # Initialize the plan for this task
         policy.initialize_plan(task_description)
