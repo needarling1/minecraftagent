@@ -256,9 +256,9 @@ When deploying with AgentBeats earthshaker controllers:
 
 ```bash
 # 1. Set up controller environment
-conda create -n agentbeats-controller python=3.10 -y
+conda create -n agentbeats-controller python=3.13 -y
 conda activate agentbeats-controller
-pip install agentbeats
+pip install earthshaker
 
 # 2. Set up agent environment
 conda create -n minecraft-benchmark python=3.10 -y
